@@ -164,6 +164,25 @@ if ($ADMIN->fulltree) {
         )
     );
 
+    $userfields = ['' => 'User / Username'];
+    $sql = "SELECT muif.id, muic.id cid, muic.name catname, muif.shortname, muif.name
+              FROM mdl_user_info_field muif
+              JOIN mdl_user_info_category muic ON muif.categoryid = muic.id
+          ORDER BY muic.sortorder, muif.sortorder";
+    $userprofilefields = $DB->get_records_sql($sql);
+    foreach ($userprofilefields as $userprofilefield) {
+        $userfields[$userprofilefield->shortname] = $userprofilefield->catname . ' / ' . $userprofilefield->name;
+    }
+    $settings->add(
+        new admin_setting_configselect(
+            'block_panopto/userfield_to_send',
+            get_string('username_field_to_send', 'block_panopto'),
+            get_string('username_field_to_send_desc', 'block_panopto'),
+            '',
+            $userfields
+        )
+    );
+
     $settings->add(new admin_setting_heading('block_panopto/panopto_folder_and_category_options',
             get_string('block_global_panopto_folder_and_category_options', 'block_panopto'),
             ''));
