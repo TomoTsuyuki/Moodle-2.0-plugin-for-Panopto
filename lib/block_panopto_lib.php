@@ -395,17 +395,15 @@ function panopto_update_system_publishers() {
  * @return string
  */
 function panopto_convert_user_to_send($user): string {
-    global $DB;
+    global $CFG, $DB;
     $userfieldtosend = get_config('block_panopto', 'userfield_to_send');
     if (!empty($userfieldtosend)) {
-        $sql = 'SELECT uid.userid, uid.data
-                  FROM {user_info_data} uid
-                  JOIN {user_info_field} uif ON uid.fieldid = uif.id
-                 WHERE uif.shortname = :sname AND uid.userid = :uid';
-        $data = $DB->get_record_sql($sql, ['sname' => $userfieldtosend, 'uid' => $user->id]);
-        if (!empty($data)) {
-            return $data->data;
+        $fieldname = 'profile_field_' . $userfieldtosend;
+        if (!isset($user->$fieldname)) {
+            require_once($CFG->dirroot . '/user/profile/lib.php');
+            profile_load_data($user);
         }
+        return $user->$fieldname ?? 'guest';
     }
     return $user->username;
 }

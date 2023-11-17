@@ -165,13 +165,9 @@ if ($ADMIN->fulltree) {
     );
 
     $userfields = ['' => 'User / Username'];
-    $sql = "SELECT muif.id, muic.id cid, muic.name catname, muif.shortname, muif.name
-              FROM mdl_user_info_field muif
-              JOIN mdl_user_info_category muic ON muif.categoryid = muic.id
-          ORDER BY muic.sortorder, muif.sortorder";
-    $userprofilefields = $DB->get_records_sql($sql);
+    $userprofilefields = $DB->get_records('user_info_field', ['datatype' => 'text'], 'sortorder');
     foreach ($userprofilefields as $userprofilefield) {
-        $userfields[$userprofilefield->shortname] = $userprofilefield->catname . ' / ' . $userprofilefield->name;
+        $userfields[$userprofilefield->shortname] = $userprofilefield->name;
     }
     $settings->add(
         new admin_setting_configselect(
