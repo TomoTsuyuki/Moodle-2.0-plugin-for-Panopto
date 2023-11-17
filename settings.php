@@ -164,7 +164,7 @@ if ($ADMIN->fulltree) {
         )
     );
 
-    $userfields = ['' => 'User / Username'];
+    $userfields = ['' => get_string('username')];
     $userprofilefields = $DB->get_records('user_info_field', ['datatype' => 'text'], 'sortorder');
     foreach ($userprofilefields as $userprofilefield) {
         $userfields[$userprofilefield->shortname] = $userprofilefield->name;
