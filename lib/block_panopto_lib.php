@@ -403,7 +403,9 @@ function panopto_convert_user_to_send($user): string {
             require_once($CFG->dirroot . '/user/profile/lib.php');
             profile_load_data($user);
         }
-        return $user->$fieldname ?? 'guest';
+        if (!empty($user->$fieldname)) {
+            return $user->$fieldname;
+        }
     }
     return $user->username;
 }
